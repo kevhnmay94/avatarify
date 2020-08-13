@@ -6,7 +6,22 @@ from subprocess import Popen, PIPE
 import importlib
 afy_spec = importlib.util.find_spec("afy")
 afy_found = afy_spec is not None
-from afy.arguments import opt
+import base64
+import numpy as np
+import shlex
+import cv2
+import time
+import binascii, os
+if afy_found:
+    from afy.arguments import opt
+    from afy import predictor_remote
+    from afy.utils import crop, resize
+    from afy import afy_flask_register_status, afy_flask_avatar_status, afy_flask_predict_status, afy_flask_logout_status
+else:
+    from arguments import opt
+    import predictor_remote
+    from utils import crop, resize
+    import afy_flask_register_status, afy_flask_avatar_status, afy_flask_predict_status, afy_flask_logout_status
 if not flask.current_app:
     app = Flask(__name__)
     app.port_start = 10500
@@ -19,20 +34,6 @@ if not flask.current_app:
     app.opt = opt
 else:
     from flask import current_app as app
-import base64
-import numpy as np
-import shlex
-import cv2
-import time
-import binascii, os
-if afy_found:
-    from afy import predictor_remote
-    from afy.utils import crop, resize
-    from afy import afy_flask_register_status, afy_flask_avatar_status, afy_flask_predict_status, afy_flask_logout_status
-else:
-    import predictor_remote
-    from utils import crop, resize
-    import afy_flask_register_status, afy_flask_avatar_status, afy_flask_predict_status, afy_flask_logout_status
 
 Popen(shlex.split("kill -9 $(ps aux | grep 'afy/cam_fomm.py' | awk '{print $2}') 2> /dev/null"))
 time.sleep(2)
