@@ -5,8 +5,7 @@
 ENABLE_CONDA=1
 ENABLE_VCAM=0
 KILL_PS=0
-IS_WORKER=1
-IS_CLIENT=0
+IS_LOCAL=0
 USE_GUNICORN=0
 
 FOMM_CONFIG=fomm/config/vox-adv-256.yaml
@@ -34,6 +33,14 @@ while (( "$#" )); do
             USE_GUNICORN=1
             shift
             ;;
+        --remote)
+            IS_LOCAL=0
+            shift
+            ;;
+        --local)
+            IS_LOCAL=1
+            shift
+            ;;
         *|-*|--*)
             ARGS="$ARGS $1"
             shift
@@ -42,6 +49,12 @@ while (( "$#" )); do
 done
 
 eval set -- "$ARGS"
+
+if [[ $IS_LOCAL == 1 ]]; then
+    NAME=afy_flask_local
+else
+    NAME=afy_flask
+fi
     
 if [[ $KILL_PS == 1 ]]; then
     kill -9 $(ps aux | grep 'afy/cam_fomm.py' | awk '{print $2}') 2> /dev/null
@@ -61,9 +74,9 @@ fi
 export PYTHONPATH=$PYTHONPATH:$(pwd):$(pwd)/fomm
 
 if [[ $USE_GUNICORN == 1 ]]; then
-  gunicorn --workers 4 --bind 0.0.0.0:8093 afy.afy_flask_local:app
+  gunicorn --workers 4 --bind 0.0.0.0:8093 afy."$NAME":app
 else
-  python afy/afy_flask_local.py \
+  python afy/"$NAME".py \
       --config $FOMM_CONFIG \
       --checkpoint $FOMM_CKPT \
       --relative \
