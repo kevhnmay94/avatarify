@@ -40,7 +40,7 @@ def vprint(*data):
         print(*data)
 
 def generate_token():
-    return binascii.hexlify(os.urandom(20)).decode()
+    return str(binascii.hexlify(os.urandom(20)).decode())
 
 def register_response(status=afy_flask_register_status.UNKNOWN_ERROR,token=None, error=None):
     resp = {}
