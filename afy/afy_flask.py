@@ -1,5 +1,3 @@
-#! /home/easysoft/anaconda3/envs/avatarify/bin/python
-
 import flask
 from flask import Flask, request
 from subprocess import Popen, PIPE

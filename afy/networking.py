@@ -1,10 +1,16 @@
+import importlib
 import zmq
 import numpy as np
 import msgpack
 import msgpack_numpy as m
 m.patch()
 
-from afy.utils import log
+afy_spec = importlib.util.find_spec("afy")
+afy_found = afy_spec is not None
+if afy_found:
+    from afy.utils import log
+else:
+    from utils import log
 
 
 def check_connection(socket, timeout=1000):
