@@ -1,3 +1,5 @@
+app = None
+
 import flask
 from flask import Flask, request
 import importlib

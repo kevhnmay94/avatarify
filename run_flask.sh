@@ -7,6 +7,7 @@ ENABLE_VCAM=0
 KILL_PS=0
 IS_WORKER=1
 IS_CLIENT=0
+USE_GUNICORN=0
 
 FOMM_CONFIG=fomm/config/vox-adv-256.yaml
 FOMM_CKPT=vox-adv-cpk.pth.tar
@@ -27,6 +28,10 @@ while (( "$#" )); do
             ;;
         --keep-ps)
             KILL_PS=0
+            shift
+            ;;
+        --gunicorn)
+            USE_GUNICORN=1
             shift
             ;;
         *|-*|--*)
@@ -55,10 +60,14 @@ fi
 
 export PYTHONPATH=$PYTHONPATH:$(pwd):$(pwd)/fomm
 
-python afy/afy_flask_local.py \
-    --config $FOMM_CONFIG \
-    --checkpoint $FOMM_CKPT \
-    --virt-cam $CAMID_VIRT \
-    --relative \
-    --adapt_scale \
-    $@
+if [[ $USE_GUNICORN== 1 ]]; then
+  gunicorn --workers 4 --bind 0.0.0.0:8093 afy.afy_flask_local:app
+else
+  python afy/afy_flask_local.py \
+      --config $FOMM_CONFIG \
+      --checkpoint $FOMM_CKPT \
+      --virt-cam $CAMID_VIRT \
+      --relative \
+      --adapt_scale \
+      $@
+fi

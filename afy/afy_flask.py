@@ -1,3 +1,5 @@
+app = None
+
 import flask
 from flask import Flask, request
 from subprocess import Popen, PIPE
