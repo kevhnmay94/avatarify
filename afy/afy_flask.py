@@ -65,8 +65,9 @@ def predict_response(status=afy_flask_avatar_status.UNKNOWN_ERROR,image=None, er
 @app.route('/avatarify', methods=['GET'])
 def register():
     try:
-        port = app.unused_port.pop()
-        if port is None:
+        if app.unused_port:
+            port = app.unused_port.pop()
+        else:
             return register_response(status=afy_flask_register_status.QUOTA_EXCEEDED,error="Quota Exceeded")
         in_addr = app.base_address + ":" + str(port)
         out_addr = app.base_address + ":" + str(port+1)
@@ -77,7 +78,10 @@ def register():
             predictor = predictor_remote.PredictorRemote(in_addr=in_addr,out_addr=out_addr, **app.opt)
         except ConnectionError as err:
             return register_response(status=afy_flask_register_status.CONNECTION_ERROR,error=err)
-        token = generate_token()
+        while True:
+            token = generate_token()
+            if token not in app.processes:
+                break
         app.processes[token]['port'] = port
         app.processes[token]['ps'] = ps
         app.processes[token]['predictor'] = predictor
@@ -94,8 +98,8 @@ def change_avatar(token):
             ava_g = ava_f.read()
             ava_np = np.fromstring(ava_g, np.uint8)
             ava_h = cv2.imdecode(ava_np,cv2.IMREAD_COLOR)
-            d = app.processes[token]['predictor']
-            if d is not None:
+            if token in app.processes:
+                d = app.processes[token]['predictor']
                 d['predictor'].set_source_image(ava_h)
                 d['predictor'].reset_frames()
                 return avatar_response(status=afy_flask_avatar_status.SUCCESS)
@@ -116,8 +120,8 @@ def predict(token):
             img_g = img.read()
             img_np = np.fromstring(img_g, np.uint8)
             frame = cv2.imdecode(img_np, cv2.IMREAD_COLOR)
-            d = app.processes[token]['predictor']
-            if d is not None:
+            if token in app.processes:
+                d = app.processes[token]['predictor']
                 frame = frame[..., ::-1]
                 frame_orig = frame.copy()
                 frame, lrudwh = crop(frame, p=frame_proportion, offset_x=frame_offset_x, offset_y=frame_offset_y)
@@ -138,8 +142,8 @@ def predict(token):
 
 @app.route('/avatarify/<token>/logout', methods=['GET'])
 def logout(token):
-    d = app.processes.pop(token)
-    if d is not None:
+    if token in app.processes:
+        d = app.processes.pop(token)
         port = d['port']
         ps = d['ps']
         predictor = d['predictor']
