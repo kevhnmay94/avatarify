@@ -23,6 +23,7 @@ conda activate $CONDA_ENV_NAME
 
 conda install -y pytorch==1.0.0 torchvision==0.2.1 cuda100 -c pytorch
 conda install -y python-blosc==1.7.0 -c conda-forge
+conda install flask=1.1.2 gunicorn=20.0.4
 
 # FOMM
 rm -rf fomm 2> /dev/null
