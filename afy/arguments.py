@@ -29,7 +29,7 @@ parser.set_defaults(relative=False)
 parser.set_defaults(adapt_scale=False)
 parser.set_defaults(no_pad=False)
 
-opt = parser.parse_args()
+opt, _ = parser.parse_known_args()
 
 if opt.is_client and (opt.in_addr is None or opt.out_addr is None):
     raise ValueError("You have to set --in-addr and --out-addr")
