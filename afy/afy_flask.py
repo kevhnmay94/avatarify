@@ -33,10 +33,6 @@ if not flask.current_app:
 else:
     from flask import current_app as app
 
-kill_arg = ["kill","-9","$(ps aux | grep 'afy/cam_fomm.py' | awk '{print $2}')"]
-Popen(kill_arg)
-time.sleep(2)
-
 def vprint(*data):
     if app.verbose:
         print(*data)
