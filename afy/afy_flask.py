@@ -183,4 +183,4 @@ def logout(token):
         app.unused_port.append(port)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8093, debug=app.verbose, timeout=30)
+    app.run(host='0.0.0.0', port=8093, debug=app.verbose)
