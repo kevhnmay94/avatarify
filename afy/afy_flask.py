@@ -111,6 +111,7 @@ def register():
 @app.route('/avatarify/<token>/change_avatar', methods=['POST'])
 def change_avatar(token):
     try:
+        IMG_SIZE = 256
         ava_f = request.files['avatar']
         if ava_f is not None:
             ava_g = ava_f.read()
@@ -118,6 +119,10 @@ def change_avatar(token):
             ava_h = cv2.imdecode(ava_np,cv2.IMREAD_COLOR)
             if token in app.processes:
                 predictor = app.processes[token]['predictor']
+                if ava_h.ndim == 2:
+                    ava_h = np.tile(ava_h[..., None], [1, 1, 3])
+                ava_h = ava_h[..., :3][..., ::-1]
+                ava_h = resize(ava_h, (IMG_SIZE, IMG_SIZE))
                 predictor.set_source_image(ava_h)
                 predictor.reset_frames()
                 return avatar_response(status=afy_flask_avatar_status.SUCCESS)
