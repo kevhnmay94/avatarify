@@ -159,7 +159,7 @@ def predict(token):
                 out = predictor.predict(frame)
                 if out is not None:
                     out = cv2.cvtColor(out,cv2.COLOR_BGR2RGB)
-                    out = cv2.imencode(cv2.IMWRITE_JPEG_QUALITY,out)
+                    out = cv2.imencode('.jpg',out)[1]
                     out = base64.b64encode(out).decode("utf-8")
                     return predict_response(status=afy_flask_predict_status.SUCCESS,image=out)
                 return predict_response(status=afy_flask_predict_status.SUCCESS)
