@@ -2,7 +2,7 @@ from argparse import ArgumentParser
 
 parser = ArgumentParser()
 parser.add_argument("--config", default='fomm/config/vox-adv-256.yaml', help="path to config")
-parser.add_argument("--checkpoint", default='vox-cpk.pth.tar', help="path to checkpoint to restore")
+parser.add_argument("--checkpoint", default='vox-adv-cpk.pth.tar', help="path to checkpoint to restore")
 
 parser.add_argument("--relative", dest="relative", action="store_true", help="use relative or absolute keypoint coordinates")
 parser.add_argument("--adapt_scale", dest="adapt_scale", action="store_true", help="adapt movement scale based on convex hull of keypoints")
