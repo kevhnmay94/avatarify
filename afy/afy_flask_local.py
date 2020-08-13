@@ -75,6 +75,8 @@ def logout_response(status=afy_flask_logout_status.UNKNOWN_ERROR,error=None):
 @app.route('/avatarify', methods=['GET'])
 def register():
     try:
+        vprint("Processes: ", app.processes)
+        vprint("Predictors: ", app.predictors)
         if len(app.processes) == app.user_max:
             return register_response(status=afy_flask_register_status.QUOTA_EXCEEDED, error="Quota Exceeded")
         predictor_args = {
@@ -104,6 +106,8 @@ def register():
 @app.route('/avatarify/<token>/change_avatar', methods=['POST'])
 def change_avatar(token):
     try:
+        vprint("Processes: ", app.processes)
+        vprint("Predictors: ", app.predictors)
         IMG_SIZE = 256
         ava_f = request.files['avatar']
         if ava_f is not None:
@@ -133,6 +137,8 @@ def change_avatar(token):
 @app.route('/avatarify/<token>/predict', methods=['POST'])
 def predict(token):
     try:
+        vprint("Processes: ", app.processes)
+        vprint("Predictors: ", app.predictors)
         IMG_SIZE = 256
         frame_proportion = 0.9
         frame_offset_x = 0
@@ -168,6 +174,8 @@ def predict(token):
 @app.route('/avatarify/<token>/logout', methods=['GET'])
 def logout(token):
     try:
+        vprint("Processes: ", app.processes)
+        vprint("Predictors: ", app.predictors)
         if token in app.processes:
             d = app.processes.pop(token)
             predictor = d['predictor']
