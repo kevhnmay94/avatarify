@@ -32,6 +32,16 @@ else:
 if app.verbose:
     import traceback
 
+predictor_args = {
+            'config_path': app.opt.config,
+            'checkpoint_path': app.opt.checkpoint,
+            'relative': app.opt.relative,
+            'adapt_movement_scale': app.opt.adapt_scale,
+            'enc_downscale': app.opt.enc_downscale
+        }
+predictor = predictor_local.PredictorLocal(**predictor_args)
+app.predictors.append(predictor)
+
 def vprint(*data):
     if app.verbose:
         print(*data)
