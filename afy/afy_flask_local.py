@@ -82,8 +82,8 @@ def register():
             'adapt_movement_scale': app.opt.adapt_scale,
             'enc_downscale': app.opt.enc_downscale
         }
-        if app.predictor:
-            predictor = app.predictor.pop()
+        if app.predictors:
+            predictor = app.predictors.pop()
         else:
             predictor = predictor_local.PredictorLocal(**predictor_args)
         while True:
@@ -169,7 +169,7 @@ def logout(token):
         if token in app.processes:
             d = app.processes.pop(token)
             predictor = d['predictor']
-            app.predictor.append(predictor)
+            app.predictors.append(predictor)
         return logout_response()
     except Exception as e:
         if app.verbose:
