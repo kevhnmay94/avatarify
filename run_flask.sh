@@ -61,7 +61,13 @@ fi
 export PYTHONPATH=$PYTHONPATH:$(pwd):$(pwd)/fomm
 
 if [[ $USE_GUNICORN == 1 ]]; then
-  gunicorn --workers 4 --bind 0.0.0.0:8093 afy.afy_flask_local:app
+  gunicorn --workers 4 --bind 0.0.0.0:8093 afy.afy_flask_local:app \
+      --config $FOMM_CONFIG \
+      --checkpoint $FOMM_CKPT \
+      --virt-cam $CAMID_VIRT \
+      --relative \
+      --adapt_scale \
+      $@
 else
   python afy/afy_flask_local.py \
       --config $FOMM_CONFIG \
