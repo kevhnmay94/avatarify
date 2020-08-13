@@ -4,3 +4,5 @@ requests==2.23
 msgpack-numpy==0.4.5
 pyzmq==19.0.0
 opencv-python==3.4.5.20
+flask==1.1.2
+gunicorn==20.0.4
