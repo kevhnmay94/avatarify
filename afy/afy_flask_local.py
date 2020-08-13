@@ -22,7 +22,7 @@ else:
     import afy_flask_register_status, afy_flask_avatar_status, afy_flask_predict_status, afy_flask_logout_status
 if not flask.current_app:
     app = Flask(__name__)
-    app.user_max = 6
+    app.user_max = 4
     app.verbose = True
     app.processes = {}
     app.predictors = []
@@ -43,9 +43,11 @@ predictor_args = {
             'adapt_movement_scale': app.opt.adapt_scale,
             'enc_downscale': app.opt.enc_downscale
         }
-predictor = predictor_local.PredictorLocal(**predictor_args)
-app.predictors.append(predictor)
-vprint("Predictor loaded")
+for i in range(app.user_max):
+    predictor = predictor_local.PredictorLocal(**predictor_args)
+    app.predictors.append(predictor)
+    vprint("Predictor {} loaded".format(i+1))
+vprint("All predictors loaded")
 
 def generate_token():
     return str(binascii.hexlify(os.urandom(20)).decode())
