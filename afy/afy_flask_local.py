@@ -32,6 +32,10 @@ else:
 if app.verbose:
     import traceback
 
+def vprint(*data):
+    if app.verbose:
+        print(*data)
+
 predictor_args = {
             'config_path': app.opt.config,
             'checkpoint_path': app.opt.checkpoint,
@@ -41,10 +45,7 @@ predictor_args = {
         }
 predictor = predictor_local.PredictorLocal(**predictor_args)
 app.predictors.append(predictor)
-
-def vprint(*data):
-    if app.verbose:
-        print(*data)
+vprint("Predictor loaded")
 
 def generate_token():
     return str(binascii.hexlify(os.urandom(20)).decode())
