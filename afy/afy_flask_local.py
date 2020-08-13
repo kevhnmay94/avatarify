@@ -67,19 +67,14 @@ def register():
     try:
         if len(app.processes) == app.user_max:
             return register_response(status=afy_flask_register_status.QUOTA_EXCEEDED, error="Quota Exceeded")
-        try:
-            predictor_args = {
-                'config_path': app.opt.config,
-                'checkpoint_path': app.opt.checkpoint,
-                'relative': app.opt.relative,
-                'adapt_movement_scale': app.opt.adapt_scale,
-                'enc_downscale': app.opt.enc_downscale
-            }
-            predictor = predictor_local.PredictorLocal(**predictor_args)
-        except ConnectionError as err:
-            if app.verbose:
-                traceback.print_exc()
-            return register_response(status=afy_flask_register_status.CONNECTION_ERROR,error=str(err))
+        predictor_args = {
+            'config_path': app.opt.config,
+            'checkpoint_path': app.opt.checkpoint,
+            'relative': app.opt.relative,
+            'adapt_movement_scale': app.opt.adapt_scale,
+            'enc_downscale': app.opt.enc_downscale
+        }
+        predictor = predictor_local.PredictorLocal(**predictor_args)
         while True:
             token = generate_token()
             if token not in app.processes:
