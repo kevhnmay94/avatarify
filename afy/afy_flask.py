@@ -190,7 +190,7 @@ def logout(token):
             predictor.stop()
             ps.kill()
             app.unused_port.append(port)
-        return logout_response()
+        return logout_response(afy_flask_logout_status.SUCCESS)
     except Exception as e:
         if app.verbose:
             traceback.print_exc()
