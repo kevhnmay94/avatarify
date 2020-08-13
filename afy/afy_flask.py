@@ -117,9 +117,9 @@ def change_avatar(token):
             ava_np = np.fromstring(ava_g, np.uint8)
             ava_h = cv2.imdecode(ava_np,cv2.IMREAD_COLOR)
             if token in app.processes:
-                d = app.processes[token]['predictor']
-                d['predictor'].set_source_image(ava_h)
-                d['predictor'].reset_frames()
+                predictor = app.processes[token]['predictor']
+                predictor.set_source_image(ava_h)
+                predictor.reset_frames()
                 return avatar_response(status=afy_flask_avatar_status.SUCCESS)
             return avatar_response(status=afy_flask_avatar_status.NO_PREDICTOR,error="Predictor not available")
         return avatar_response(status=afy_flask_avatar_status.INPUT_IMAGE_ERROR,error="Invalid image / image corrupted")
@@ -141,13 +141,13 @@ def predict(token):
             img_np = np.fromstring(img_g, np.uint8)
             frame = cv2.imdecode(img_np, cv2.IMREAD_COLOR)
             if token in app.processes:
-                d = app.processes[token]['predictor']
+                predictor = app.processes[token]['predictor']
                 frame = frame[..., ::-1]
                 frame_orig = frame.copy()
                 frame, lrudwh = crop(frame, p=frame_proportion, offset_x=frame_offset_x, offset_y=frame_offset_y)
                 frame_lrudwh = lrudwh
                 frame = resize(frame, (IMG_SIZE, IMG_SIZE))[..., :3]
-                out = d['predictor'].predict(frame)
+                out = predictor.predict(frame)
                 if out is not None:
                     out = cv2.cvtColor(out,cv2.COLOR_BGR2RGB)
                     out = cv2.imencode(cv2.IMWRITE_JPEG_QUALITY,out)
