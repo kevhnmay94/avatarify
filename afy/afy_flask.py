@@ -81,8 +81,14 @@ def register():
         ps = Popen(sps)
         time.sleep(2)
         try:
-            option = app.opt
-            predictor = predictor_remote.PredictorRemote(in_addr=in_addr,out_addr=out_addr, **option)
+            option = predictor_args = {
+                'config_path': app.opt.config,
+                'checkpoint_path': app.opt.checkpoint,
+                'relative': app.opt.relative,
+                'adapt_movement_scale': app.opt.adapt_scale,
+                'enc_downscale': app.opt.enc_downscale
+            }
+            predictor = predictor_remote.PredictorRemote(in_addr=in_addr,out_addr=out_addr, **predictor_args)
         except ConnectionError as err:
             if app.verbose:
                 traceback.print_exc()
