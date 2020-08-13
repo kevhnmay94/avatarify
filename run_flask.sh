@@ -66,7 +66,6 @@ else
   python afy/afy_flask_local.py \
       --config $FOMM_CONFIG \
       --checkpoint $FOMM_CKPT \
-      --virt-cam $CAMID_VIRT \
       --relative \
       --adapt_scale \
       $@
