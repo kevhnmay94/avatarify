@@ -67,6 +67,13 @@ def predict_response(status=afy_flask_avatar_status.UNKNOWN_ERROR,image=None, er
         resp['error'] = error
     return resp
 
+def logout_response(status=afy_flask_logout_status.UNKNOWN_ERROR,error=None):
+    resp = {}
+    resp['status'] = status
+    if error is not None:
+        resp['error'] = error
+    return resp
+
 
 @app.route('/avatarify', methods=['GET'])
 def register():
@@ -164,24 +171,30 @@ def predict(token):
                     out = base64.b64encode(out).decode("utf-8")
                     return predict_response(status=afy_flask_predict_status.SUCCESS,image=out)
                 return predict_response(status=afy_flask_predict_status.SUCCESS)
-            return avatar_response(status=afy_flask_predict_status.NO_PREDICTOR, error="Predictor not available")
-        return avatar_response(status=afy_flask_predict_status.INPUT_IMAGE_ERROR, error="Invalid image / image corrupted")
+            return predict_response(status=afy_flask_predict_status.NO_PREDICTOR, error="Predictor not available")
+        return predict_response(status=afy_flask_predict_status.INPUT_IMAGE_ERROR, error="Invalid image / image corrupted")
     except Exception as e:
         if app.verbose:
             traceback.print_exc()
-        return avatar_response(error=str(e))
+        return predict_response(error=str(e))
 
 
 @app.route('/avatarify/<token>/logout', methods=['GET'])
 def logout(token):
-    if token in app.processes:
-        d = app.processes.pop(token)
-        port = d['port']
-        ps = d['ps']
-        predictor = d['predictor']
-        predictor.stop()
-        ps.kill()
-        app.unused_port.append(port)
+    try:
+        if token in app.processes:
+            d = app.processes.pop(token)
+            port = d['port']
+            ps = d['ps']
+            predictor = d['predictor']
+            predictor.stop()
+            ps.kill()
+            app.unused_port.append(port)
+        return logout_response()
+    except Exception as e:
+        if app.verbose:
+            traceback.print_exc()
+        return logout_response(error=str(e))
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8093, debug=app.verbose)
