@@ -97,6 +97,7 @@ def register():
             token = generate_token()
             if token not in app.processes:
                 break
+        app.processes[token] = {}
         app.processes[token]['port'] = port
         app.processes[token]['ps'] = ps
         app.processes[token]['predictor'] = predictor
