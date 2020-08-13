@@ -81,7 +81,8 @@ def register():
         ps = Popen(sps)
         time.sleep(2)
         try:
-            predictor = predictor_remote.PredictorRemote(in_addr=in_addr,out_addr=out_addr, **app.opt)
+            option = app.opt
+            predictor = predictor_remote.PredictorRemote(in_addr=in_addr,out_addr=out_addr, **option)
         except ConnectionError as err:
             if app.verbose:
                 traceback.print_exc()
