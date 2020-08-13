@@ -32,6 +32,8 @@ if not flask.current_app:
     app.opt = opt
 else:
     from flask import current_app as app
+if app.verbose:
+    import traceback
 
 def vprint(*data):
     if app.verbose:
@@ -81,7 +83,8 @@ def register():
         try:
             predictor = predictor_remote.PredictorRemote(in_addr=in_addr,out_addr=out_addr, **app.opt)
         except ConnectionError as err:
-            vprint(err)
+            if app.verbose:
+                traceback.print_exc()
             return register_response(status=afy_flask_register_status.CONNECTION_ERROR,error=str(err))
         while True:
             token = generate_token()
@@ -92,7 +95,8 @@ def register():
         app.processes[token]['predictor'] = predictor
         return register_response(status=afy_flask_register_status.SUCCESS,token=token)
     except Exception as e:
-        vprint(e)
+        if app.verbose:
+            traceback.print_exc()
         return register_response(error=str(e))
 
 
@@ -112,7 +116,8 @@ def change_avatar(token):
             return avatar_response(status=afy_flask_avatar_status.NO_PREDICTOR,error="Predictor not available")
         return avatar_response(status=afy_flask_avatar_status.INPUT_IMAGE_ERROR,error="Invalid image / image corrupted")
     except Exception as e:
-        vprint(e)
+        if app.verbose:
+            traceback.print_exc()
         return avatar_response(error=str(e))
 
 @app.route('/avatarify/<token>/predict', methods=['POST'])
@@ -144,7 +149,8 @@ def predict(token):
             return avatar_response(status=afy_flask_predict_status.NO_PREDICTOR, error="Predictor not available")
         return avatar_response(status=afy_flask_predict_status.INPUT_IMAGE_ERROR, error="Invalid image / image corrupted")
     except Exception as e:
-        vprint(e)
+        if app.verbose:
+            traceback.print_exc()
         return avatar_response(error=str(e))
 
 
