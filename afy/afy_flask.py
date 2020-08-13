@@ -123,8 +123,12 @@ def change_avatar(token):
                     ava_h = np.tile(ava_h[..., None], [1, 1, 3])
                 ava_h = ava_h[..., :3][..., ::-1]
                 ava_h = resize(ava_h, (IMG_SIZE, IMG_SIZE))
+                vprint('set_source_image')
                 predictor.set_source_image(ava_h)
+                vprint('finished set_source_image')
+                vprint('reset_frames')
                 predictor.reset_frames()
+                vprint('finished reset_frames')
                 return avatar_response(status=afy_flask_avatar_status.SUCCESS)
             return avatar_response(status=afy_flask_avatar_status.NO_PREDICTOR,error="Predictor not available")
         return avatar_response(status=afy_flask_avatar_status.INPUT_IMAGE_ERROR,error="Invalid image / image corrupted")
@@ -179,4 +183,4 @@ def logout(token):
         app.unused_port.append(port)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8093, debug=app.verbose)
+    app.run(host='0.0.0.0', port=8093, debug=app.verbose, timeout=30)
