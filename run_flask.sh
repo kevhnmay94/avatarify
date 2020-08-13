@@ -60,7 +60,7 @@ fi
 
 export PYTHONPATH=$PYTHONPATH:$(pwd):$(pwd)/fomm
 
-if [[ $USE_GUNICORN== 1 ]]; then
+if [[ $USE_GUNICORN == 1 ]]; then
   gunicorn --workers 4 --bind 0.0.0.0:8093 afy.afy_flask_local:app
 else
   python afy/afy_flask_local.py \
