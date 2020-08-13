@@ -81,7 +81,7 @@ def register():
         ps = Popen(sps)
         time.sleep(2)
         try:
-            option = predictor_args = {
+            predictor_args = {
                 'config_path': app.opt.config,
                 'checkpoint_path': app.opt.checkpoint,
                 'relative': app.opt.relative,
