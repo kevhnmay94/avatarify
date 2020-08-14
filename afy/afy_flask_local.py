@@ -23,7 +23,7 @@ else:
 if not flask.current_app:
     app = Flask(__name__)
     app.user_max = 4
-    app.verbose = True
+    app.verbose = opt.verbose
     app.processes = {}
     app.predictors = []
     app.opt = opt
@@ -46,8 +46,8 @@ predictor_args = {
 for i in range(app.user_max):
     predictor = predictor_local.PredictorLocal(**predictor_args)
     app.predictors.append(predictor)
-    vprint("Predictor {} loaded".format(i+1))
-vprint("All predictors loaded")
+    print("Predictor {} loaded".format(i+1))
+print("All predictors loaded")
 
 def generate_token():
     return str(binascii.hexlify(os.urandom(20)).decode())
