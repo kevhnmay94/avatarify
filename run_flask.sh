@@ -74,7 +74,7 @@ fi
 export PYTHONPATH=$PYTHONPATH:$(pwd):$(pwd)/fomm
 
 if [[ $USE_GUNICORN == 1 ]]; then
-  gunicorn --bind 0.0.0.0:8093 -t 150 afy."$NAME":app
+  gunicorn --bind 0.0.0.0:8093 -t 300 --threads 4 afy."$NAME":app
 else
   python afy/"$NAME".py \
       --config $FOMM_CONFIG \
