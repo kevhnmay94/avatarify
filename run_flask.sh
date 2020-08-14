@@ -57,7 +57,7 @@ else
 fi
     
 if [[ $KILL_PS == 1 ]]; then
-    kill -9 $(ps aux | grep 'afy/cam_fomm.py' | awk '{print $2}') 2> /dev/null
+    kill -9 $(ps aux | grep 'afy."$NAME":app' | awk '{print $2}') 2> /dev/null
 fi
 
 source scripts/settings.sh
