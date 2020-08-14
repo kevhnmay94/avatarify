@@ -22,7 +22,7 @@ else:
     import afy_flask_register_status, afy_flask_avatar_status, afy_flask_predict_status, afy_flask_logout_status
 if not flask.current_app:
     app = Flask(__name__)
-    app.user_max = 4
+    app.user_max = 8
     app.verbose = opt.verbose
     app.processes = {}
     app.predictors = []
